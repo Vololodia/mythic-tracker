@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MythicTracker.Application", "src\MythicTracker.Application\MythicTracker.Application.csproj", "{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8F3E3650-0E3E-461D-ACEC-DE7FA91BA57E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{733632F4-BEF5-41BB-AF92-C8CA56679EF0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4538DE02-8F1E-4142-91F4-87C555219BC4}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MythicTracker.Application.Tests", "tests\MythicTracker.Application.Tests\MythicTracker.Application.Tests.csproj", "{B0489185-94D3-43FC-A068-EC5DAC26C20E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MythicTracker.ConsoleApp", "src\MythicTracker.ConsoleApp\MythicTracker.ConsoleApp.csproj", "{B09FFB1E-8D5F-44DC-87DA-C757EB8D88B6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Debug|x64.ActiveCfg = Debug|x64
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Debug|x64.Build.0 = Debug|x64
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Release|x64.ActiveCfg = Release|x64
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Release|x64.Build.0 = Release|x64
+		{B0489185-94D3-43FC-A068-EC5DAC26C20E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0489185-94D3-43FC-A068-EC5DAC26C20E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0489185-94D3-43FC-A068-EC5DAC26C20E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B0489185-94D3-43FC-A068-EC5DAC26C20E}.Debug|x64.Build.0 = Debug|Any CPU
+		{B0489185-94D3-43FC-A068-EC5DAC26C20E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0489185-94D3-43FC-A068-EC5DAC26C20E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0489185-94D3-43FC-A068-EC5DAC26C20E}.Release|x64.ActiveCfg = Release|Any CPU
+		{B0489185-94D3-43FC-A068-EC5DAC26C20E}.Release|x64.Build.0 = Release|Any CPU
+		{B09FFB1E-8D5F-44DC-87DA-C757EB8D88B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B09FFB1E-8D5F-44DC-87DA-C757EB8D88B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B09FFB1E-8D5F-44DC-87DA-C757EB8D88B6}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B09FFB1E-8D5F-44DC-87DA-C757EB8D88B6}.Debug|x64.Build.0 = Debug|Any CPU
+		{B09FFB1E-8D5F-44DC-87DA-C757EB8D88B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B09FFB1E-8D5F-44DC-87DA-C757EB8D88B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B09FFB1E-8D5F-44DC-87DA-C757EB8D88B6}.Release|x64.ActiveCfg = Release|Any CPU
+		{B09FFB1E-8D5F-44DC-87DA-C757EB8D88B6}.Release|x64.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE} = {8F3E3650-0E3E-461D-ACEC-DE7FA91BA57E}
+		{B0489185-94D3-43FC-A068-EC5DAC26C20E} = {733632F4-BEF5-41BB-AF92-C8CA56679EF0}
+		{B09FFB1E-8D5F-44DC-87DA-C757EB8D88B6} = {8F3E3650-0E3E-461D-ACEC-DE7FA91BA57E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C1D2D02A-304E-41CE-9B27-DBE2D3CED56F}
+	EndGlobalSection
+EndGlobal
