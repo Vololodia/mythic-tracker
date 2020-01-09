@@ -12,6 +12,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4538DE02-8F1E-4142-91F4-87C555219BC4}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		stylecop.json = stylecop.json
+		stylecop.ruleset = stylecop.ruleset
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MythicTracker.Application.Tests", "tests\MythicTracker.Application.Tests\MythicTracker.Application.Tests.csproj", "{B0489185-94D3-43FC-A068-EC5DAC26C20E}"
