@@ -7,7 +7,9 @@ namespace MythicTracker.Application.Tests
     /// </summary>
     public class ExampleTest
     {
-
+        /// <summary>
+        /// Пример теста.
+        /// </summary>
         [Fact]
         public void EmptyTest()
         {

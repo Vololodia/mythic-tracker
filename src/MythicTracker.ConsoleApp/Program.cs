@@ -7,8 +7,6 @@ namespace MythicTracker.ConsoleApp
     /// </summary>
     public class Program
     {
-        private string t;
-
         /// <summary>
         /// Стартовый метод
         /// </summary>
@@ -17,10 +15,5 @@ namespace MythicTracker.ConsoleApp
         {
             Console.WriteLine("Hello World!");
         }
-
-        /// <summary>
-        /// asd
-        /// </summary>
-        public string V { get; set; }
     }
 }
