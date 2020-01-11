@@ -11,7 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{733632F4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4538DE02-8F1E-4142-91F4-87C555219BC4}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		stylecop.json = stylecop.json
+		stylecop.ruleset = stylecop.ruleset
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MythicTracker.Application.Tests", "tests\MythicTracker.Application.Tests\MythicTracker.Application.Tests.csproj", "{B0489185-94D3-43FC-A068-EC5DAC26C20E}"
@@ -28,12 +32,12 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Debug|x64.ActiveCfg = Debug|x64
-		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Debug|x64.Build.0 = Debug|x64
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Debug|x64.Build.0 = Debug|Any CPU
 		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Release|x64.ActiveCfg = Release|x64
-		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Release|x64.Build.0 = Release|x64
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Release|x64.ActiveCfg = Release|Any CPU
+		{47B3E97C-6CDC-4B6D-BDED-C2DB58AA80FE}.Release|x64.Build.0 = Release|Any CPU
 		{B0489185-94D3-43FC-A068-EC5DAC26C20E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B0489185-94D3-43FC-A068-EC5DAC26C20E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B0489185-94D3-43FC-A068-EC5DAC26C20E}.Debug|x64.ActiveCfg = Debug|Any CPU
