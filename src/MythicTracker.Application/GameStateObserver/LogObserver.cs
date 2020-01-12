@@ -9,9 +9,9 @@ namespace MythicTracker.Application.GameStateObserver
     public class LogObserver : IGameStateObserver
     {
         private readonly string _logDirectory;
-        private List<string> _newLogLines = new List<string>();
+        private readonly List<string> _newLogLines = new List<string>();
         private FileSystemWatcher watcher;
-        private int _lastReadLineNumber = 1;
+        private int _lastReadLineNumber = 0;
         public LogObserver(string Log)
         {
             _logDirectory = Log;
@@ -19,24 +19,20 @@ namespace MythicTracker.Application.GameStateObserver
 
         private void RunLogChangeWatcher( )
         {
-            if (watcher == null)
+            if (watcher != null)
             {
-                watcher = new FileSystemWatcher()
-                {
-                    Path = _logDirectory,
-                    NotifyFilter = NotifyFilters.LastWrite
-                };
-
-                watcher.Created += OnChanged;
-                watcher.Changed += OnChanged;
-                watcher.EnableRaisingEvents = true;
+                return;
             }
 
-            else
+            watcher = new FileSystemWatcher()
             {
-                return; 
-            }
+                Path = _logDirectory,
+                NotifyFilter = NotifyFilters.LastWrite
+            };
 
+            watcher.Created += OnChanged;
+            watcher.Changed += OnChanged;
+            watcher.EnableRaisingEvents = true;
         }
 
         public event EventHandler Notify;
@@ -50,7 +46,7 @@ namespace MythicTracker.Application.GameStateObserver
         {
             using (StreamReader sr = new StreamReader(_logDirectory))
             {
-                for(int i = 1; i <= _lastReadLineNumber; i++)
+                for(int i = 1; i < _lastReadLineNumber; i++)
                 {
                     sr.ReadLine();
                 }
@@ -60,9 +56,7 @@ namespace MythicTracker.Application.GameStateObserver
                     _newLogLines.Add(sr.ReadLine());
                     _lastReadLineNumber++;
                 }
-
             }
-
         }
         public void Finish()
         {
@@ -74,6 +68,5 @@ namespace MythicTracker.Application.GameStateObserver
         {
             RunLogChangeWatcher();
         }
-
     }
 }
