@@ -16,4 +16,10 @@
     <ProjectReference Include="..\..\src\MythicTracker.Application\MythicTracker.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="MTGA\TestData\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
