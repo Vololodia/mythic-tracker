@@ -14,5 +14,3 @@ namespace MythicTracker.Application.GameStateObserver
         }
     }
 }
-
-   
