@@ -2,9 +2,16 @@
 
 namespace MythicTracker.ConsoleApp
 {
-    class Program
+    /// <summary>
+    /// Главный класс.
+    /// </summary>
+    public class Program
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// Стартовый метод
+        /// </summary>
+        /// <param name="args">Параметры</param>
+        public static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
         }
