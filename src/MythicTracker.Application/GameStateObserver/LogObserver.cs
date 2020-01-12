@@ -1,59 +1,46 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
 namespace MythicTracker.Application.GameStateObserver
 {
-    class LogObserver : IGameStateObserver
+    public class LogObserver : IGameStateObserver
     {
-        private static string LogDirectory;
-        private static string LogStream;
-        public static string _LogDirectory
+        private string _logDirectory { get; set; }
+        ArrayList _logStream = new ArrayList();
+        private int _lastReadLineNumber { get; set; }
+        public LogObserver(string Log)
         {
-            get { return LogDirectory; }
-            set { LogDirectory = value; }
+            _logDirectory = Log;
         }
-
-        public LogObserver(string LogDirectory)
-        {
-            _LogDirectory = LogDirectory;
-        }
-
         private void RunLogChangeWatcher( )
         {
-            string args = _LogDirectory;
-
-            using(FileSystemWatcher watcher = new FileSystemWatcher())
-            {
-                watcher.Path = args;
-                watcher.NotifyFilter = NotifyFilters.LastWrite;
-                watcher.Created += OnChanged;
-                watcher.Changed += OnChanged;
-                watcher.EnableRaisingEvents = true;
-            }
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            watcher.Path = _logDirectory;
+            watcher.NotifyFilter = NotifyFilters.LastWrite;
+            watcher.Created += OnChanged;
+            watcher.Changed += OnChanged;
+            watcher.EnableRaisingEvents = true;
         }
-
         public event EventHandler Notify;
-
         protected virtual void OnChanged(object source, FileSystemEventArgs e)
         {
-            Notify?.Invoke();
+           // Notify?.Invoke();
         }
-
-        private static void RunLogStreamReader()
+        private void RunLogStreamReader()
         {
-            string args = _LogDirectory;
-            var lineNumber = 1;
             try
             {
-                using (StreamReader sr = new StreamReader(args))
+                using (StreamReader sr = new StreamReader(_logDirectory))
                 {
-                    for(int i = 1; i <= lineNumber; i++)
+                    for(int i = 1; i <= _lastReadLineNumber; i++)
                     {
-                        LogStream = sr.ReadLine();
-                        lineNumber++;
+                        sr.ReadLine();
                     }
+                    _logStream.Add(sr.ReadLine());
+                    _lastReadLineNumber++;
                 }
             }
             catch (Exception e)
@@ -62,12 +49,10 @@ namespace MythicTracker.Application.GameStateObserver
                 Console.WriteLine(e.Message);
             }
         }
-
         public void Finish()
         {
             throw new NotImplementedException();
         }
-
         public void Start()
         {
             RunLogChangeWatcher();

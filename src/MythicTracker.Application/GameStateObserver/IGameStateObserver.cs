@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MythicTracker.Application.GameStateObserver
 {
-    interface IGameStateObserver
+    public interface IGameStateObserver
     {
         event EventHandler Notify;
         void Start();

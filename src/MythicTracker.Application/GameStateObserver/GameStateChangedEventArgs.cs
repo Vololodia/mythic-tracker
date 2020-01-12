@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MythicTracker.Application.GameStateObserver
 {
-    class GameStateChangedEventArgs : EventArgs
+    public class GameStateChangedEventArgs : EventArgs
     {
         private string[] data;
 
@@ -12,11 +12,6 @@ namespace MythicTracker.Application.GameStateObserver
         {
             Data = d;
         }
-        public string[] Data
-        {
-            get { return data; }
-            set { data = value; }
-        }
-
+        public string[] Data { get; set; }
     }
 }
