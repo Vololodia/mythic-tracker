@@ -70,5 +70,13 @@ namespace MythicTracker.Application.GameStateObserver
         {
             RunLogChangeWatcher();
         }
+
+        private static StreamReader CreateConcurrentReader(string filepath) =>
+            new StreamReader(
+                new FileStream(
+                    filepath,
+                    FileMode.Open,
+                    FileAccess.Read,
+                    FileShare.ReadWrite));
     }
 }
