@@ -7,14 +7,18 @@ namespace MythicTracker.Application.GameStateObserver
     public class LogObserver : IGameStateObserver
     {
         private readonly string _filepath;
-        private readonly List<string> _newLogLines = new List<string>();
         private FileSystemWatcher _watcher;
-        private int _lastReadLineNumber = 0;
+        private StreamReader _streamReader;
 
         public LogObserver(string filepath)
         {
             _filepath = filepath;
+            _streamReader = CreateConcurrentReader(filepath);
         }
+
+        public delegate void EventHandler<T>(object sender, GameStateChangedEventArgs e);
+
+        public event EventHandler Notify;
 
         private void RunLogChangeWatcher()
         {
@@ -35,28 +39,19 @@ namespace MythicTracker.Application.GameStateObserver
             _watcher.EnableRaisingEvents = true;
         }
 
-        public event EventHandler<GameStateChangedEventArgs> Notify;
-
         protected virtual void OnChanged(object source, FileSystemEventArgs e)
         {
-            // Notify?.Invoke();
             RunLogStreamReader();
         }
 
         private void RunLogStreamReader()
         {
-            using (StreamReader sr = new StreamReader(_filepath))
-            {
-                for (int i = 1; i < _lastReadLineNumber; i++)
-                {
-                    sr.ReadLine();
-                }
+            string line;
+            line = _streamReader.ReadLine();
 
-                while (sr.ReadLine() != null)
-                {
-                    _newLogLines.Add(sr.ReadLine());
-                    _lastReadLineNumber++;
-                }
+            while (line != null)
+            {
+                Notify?.Invoke(this, new GameStateChangedEventArgs(new string[] { line }));
             }
         }
 
