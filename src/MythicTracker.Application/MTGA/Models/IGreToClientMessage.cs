@@ -6,6 +6,6 @@ namespace MythicTracker.Application.MTGA.Models
     [JsonConverter(typeof(GreToClientMessageConverter))]
     public interface IGreToClientMessage
     {
-        GreToClientMessageType Type { get; set; }
+        GreToClientMessageType Type { get; }
     }
 }

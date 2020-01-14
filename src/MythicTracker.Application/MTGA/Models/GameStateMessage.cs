@@ -1,13 +1,20 @@
-﻿namespace MythicTracker.Application.MTGA.Models
+﻿using System;
+using Newtonsoft.Json;
+
+namespace MythicTracker.Application.MTGA.Models
 {
     public class GameStateMessage
     {
+        [JsonProperty("type")]
         public GameStateMessageType Type { get; set; }
 
-        public GameObject[] GameObjects { get; set; }
+        [JsonProperty("gameObjects")]
+        public GameObject[] GameObjects { get; set; } = Array.Empty<GameObject>();
 
-        public Zone[] Zones { get; set; }
+        [JsonProperty("zones")]
+        public Zone[] Zones { get; set; } = Array.Empty<Zone>();
 
-        public Annotation[] Annotations { get; set; }
+        [JsonProperty("annotations")]
+        public Annotation[] Annotations { get; set; } = Array.Empty<Annotation>();
     }
 }
