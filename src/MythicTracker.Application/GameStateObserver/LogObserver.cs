@@ -47,11 +47,12 @@ namespace MythicTracker.Application.GameStateObserver
         private void RunLogStreamReader()
         {
             string line;
+            List<string> linesTemp = new List<string>();
             line = _streamReader.ReadLine();
-
             while (line != null)
             {
-                Notify?.Invoke(this, new GameStateChangedEventArgs(new string[] { line }));
+                linesTemp.Add(line);
+                Notify?.Invoke(this, new GameStateChangedEventArgs(linesTemp));
             }
         }
 
