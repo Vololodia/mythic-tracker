@@ -16,9 +16,7 @@ namespace MythicTracker.Application.GameStateObserver
             _streamReader = CreateConcurrentReader(filepath);
         }
 
-        public delegate void EventHandler<T>(object sender, GameStateChangedEventArgs e);
-
-        public event EventHandler Notify;
+        public event EventHandler<GameStateChangedEventArgs> Notify;
 
         private void RunLogChangeWatcher()
         {
@@ -53,6 +51,7 @@ namespace MythicTracker.Application.GameStateObserver
             {
                 linesTemp.Add(line);
                 Notify?.Invoke(this, new GameStateChangedEventArgs(linesTemp));
+                line = null;
             }
         }
 
