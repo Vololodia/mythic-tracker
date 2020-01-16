@@ -18,6 +18,24 @@ namespace MythicTracker.Application.GameStateObserver
 
         public event EventHandler<GameStateChangedEventArgs> Notify;
 
+        public void Finish()
+        {
+            StopLogChangeWatcher();
+        }
+
+        public void Start()
+        {
+            RunLogChangeWatcher();
+        }
+
+        private static StreamReader CreateConcurrentReader(string filepath) =>
+           new StreamReader(
+               new FileStream(
+                   filepath,
+                   FileMode.Open,
+                   FileAccess.Read,
+                   FileShare.ReadWrite));
+
         private void RunLogChangeWatcher()
         {
             if (_watcher != null)
@@ -42,6 +60,12 @@ namespace MythicTracker.Application.GameStateObserver
             RunLogStreamReader();
         }
 
+        private void StopLogChangeWatcher()
+        {
+            _watcher.Dispose();
+            _watcher = null;
+        }
+
         private void RunLogStreamReader()
         {
             string line;
@@ -51,27 +75,8 @@ namespace MythicTracker.Application.GameStateObserver
             {
                 linesTemp.Add(line);
                 Notify?.Invoke(this, new GameStateChangedEventArgs(linesTemp));
-                line = null;
+                break;
             }
         }
-
-        public void Finish()
-        {
-            _watcher.Dispose();
-            _watcher = null;
-        }
-
-        public void Start()
-        {
-            RunLogChangeWatcher();
-        }
-
-        private static StreamReader CreateConcurrentReader(string filepath) =>
-            new StreamReader(
-                new FileStream(
-                    filepath,
-                    FileMode.Open,
-                    FileAccess.Read,
-                    FileShare.ReadWrite));
     }
 }
