@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace MythicTracker.Application.GameStateObserver
 {
     public class LogObserver : IGameStateObserver
     {
         private readonly string _filepath;
-        private FileSystemWatcher _watcher;
         private StreamReader _streamReader;
+        private bool _logReadStreamSwitcher;
 
         public LogObserver(string filepath)
         {
@@ -20,12 +21,13 @@ namespace MythicTracker.Application.GameStateObserver
 
         public void Finish()
         {
-            StopLogChangeWatcher();
+            _logReadStreamSwitcher = false;
         }
 
         public void Start()
         {
-            RunLogChangeWatcher();
+            _logReadStreamSwitcher = true;
+            Task.Run(() => RunLogStreamReader());
         }
 
         private static StreamReader CreateConcurrentReader(string filepath) =>
@@ -36,46 +38,32 @@ namespace MythicTracker.Application.GameStateObserver
                    FileAccess.Read,
                    FileShare.ReadWrite));
 
-        private void RunLogChangeWatcher()
-        {
-            if (_watcher != null)
-            {
-                return;
-            }
-
-            _watcher = new FileSystemWatcher()
-            {
-                Path = Path.GetDirectoryName(_filepath),
-                Filter = Path.GetFileName(_filepath),
-                NotifyFilter = NotifyFilters.LastWrite,
-            };
-
-            _watcher.Created += OnChanged;
-            _watcher.Changed += OnChanged;
-            _watcher.EnableRaisingEvents = true;
-        }
-
-        protected virtual void OnChanged(object source, FileSystemEventArgs e)
-        {
-            RunLogStreamReader();
-        }
-
-        private void StopLogChangeWatcher()
-        {
-            _watcher.Dispose();
-            _watcher = null;
-        }
-
         private void RunLogStreamReader()
         {
-            string line;
-            List<string> linesTemp = new List<string>();
-            line = _streamReader.ReadLine();
-            while (line != null)
+            var linesTemp = new List<string>();
+            int counter = 0;
+            while (_logReadStreamSwitcher)
             {
-                linesTemp.Add(line);
-                Notify?.Invoke(this, new GameStateChangedEventArgs(linesTemp));
-                break;
+                string line = _streamReader.ReadLine();
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+                    linesTemp.Add(line);
+                    counter++;
+                    if (linesTemp.Count == 10)
+                    {
+                        Notify?.Invoke(this, new GameStateChangedEventArgs(linesTemp.ToArray()));
+                        linesTemp.RemoveRange(0, 10);
+                        counter = 0;
+                    }
+                }
+                else
+                {
+                    if (counter != 0)
+                    {
+                        Notify?.Invoke(this, new GameStateChangedEventArgs(linesTemp.ToArray()));
+                        counter = 0;
+                    }
+                }
             }
         }
     }
