@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using MythicTracker.Application.GameStateObserver;
 using Xunit;
@@ -9,7 +10,7 @@ namespace MythicTracker.Application.Tests
 {
     public class LogObserverTests
     {
-        private const int WriteDelayInMilliseconds = 1000;
+        private const int WriteDelayInMilliseconds = 500;
 
         [Fact]
         public async Task ShouldFireEventOnNewLogLine()
@@ -25,7 +26,7 @@ namespace MythicTracker.Application.Tests
                     async () =>
                     {
                         watcher.Start();
-                        writer.WriteLine("1");
+                        await writer.WriteLineAsync("1");
                         await Task.Delay(WriteDelayInMilliseconds);
                     });
 
@@ -47,9 +48,7 @@ namespace MythicTracker.Application.Tests
                     async () =>
                     {
                         watcher.Start();
-                        await writer.WriteLineAsync("1");
-                        await writer.WriteLineAsync("2");
-                        await writer.WriteLineAsync("3");
+                        await writer.WriteLineAsync("1\r\n2\r\n3");
                         await Task.Delay(WriteDelayInMilliseconds);
                     });
 
@@ -63,29 +62,17 @@ namespace MythicTracker.Application.Tests
             var filepath = $"./{Guid.NewGuid()}";
             using (var writer = CreateConcurrentWriter(filepath))
             {
-                var newLines = new List<GameStateChangedEventArgs>();
+                var raisedEvents = new List<GameStateChangedEventArgs>();
                 var watcher = new LogObserver(filepath);
-                watcher.Notify += (sender, @event) => newLines.Add(@event);
-                await writer.WriteLineAsync("0");
-                await writer.WriteLineAsync("1");
-                await writer.WriteLineAsync("2");
-                await writer.WriteLineAsync("3");
-                await writer.WriteLineAsync("4");
-                await writer.WriteLineAsync("5");
-                await writer.WriteLineAsync("6");
-                await writer.WriteLineAsync("7");
-                await writer.WriteLineAsync("8");
-                await writer.WriteLineAsync("9");
-                await writer.WriteLineAsync("10");
-                await writer.WriteLineAsync("11");
-                await writer.WriteLineAsync("12");
-                await writer.WriteLineAsync("13");
-                await writer.WriteLineAsync("14");
+                watcher.Notify += (sender, @event) => raisedEvents.Add(@event);
+
                 watcher.Start();
+                await writer.WriteLineAsync("0\r\n1\r\n2\r\n3\r\n4\r\n5\r\n6\r\n7\r\n8\r\n9\r\n10\r\n11\r\n12\r\n13\r\n14");
                 await Task.Delay(WriteDelayInMilliseconds);
-                Assert.Equal(2, newLines.Count);
-                Assert.Equal(new[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" }, newLines[0].Data);
-                Assert.Equal(new[] { "10", "11", "12", "13", "14"}, newLines[1].Data);
+
+                Assert.Equal(2, raisedEvents.Count);
+                Assert.Equal(new[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" }, raisedEvents[0].Data);
+                Assert.Equal(new[] { "10", "11", "12", "13", "14" }, raisedEvents[1].Data);
             }
         }
 
@@ -105,8 +92,7 @@ namespace MythicTracker.Application.Tests
                         watcher.Start();
                         await writer.WriteLineAsync("1");
                         watcher.Finish();
-                        await writer.WriteLineAsync("2");
-                        await writer.WriteLineAsync("3");
+                        await writer.WriteLineAsync("2\r\n3");
                         await Task.Delay(WriteDelayInMilliseconds);
                     });
 
@@ -120,21 +106,18 @@ namespace MythicTracker.Application.Tests
             var filepath = $"./{Guid.NewGuid()}";
             using (var writer = CreateConcurrentWriter(filepath))
             {
+                var raisedEvents = new List<GameStateChangedEventArgs>();
                 var watcher = new LogObserver(filepath);
+                watcher.Notify += (sender, @event) => raisedEvents.Add(@event);
 
-                var raisedEvent = await Assert.RaisesAsync<GameStateChangedEventArgs>(
-                    handler => watcher.Notify += handler,
-                    handler => watcher.Notify -= handler,
-                    async () =>
-                    {
-                        await writer.WriteLineAsync("1");
-                        watcher.Start();
-                        await writer.WriteLineAsync("2");
-                        await writer.WriteLineAsync("3");
-                        await Task.Delay(WriteDelayInMilliseconds);
-                    });
+                await writer.WriteLineAsync("1");
+                watcher.Start();
+                await writer.WriteLineAsync("2");
+                await writer.WriteLineAsync("3");
+                await Task.Delay(WriteDelayInMilliseconds);
 
-                Assert.Equal(new[] { "1", "2", "3" }, raisedEvent.Arguments.Data);
+                Assert.True(raisedEvents.Count > 0);
+                Assert.Equal(new[] { "1", "2", "3" }, raisedEvents.SelectMany(x => x.Data).ToArray());
             }
         }
 
@@ -144,22 +127,19 @@ namespace MythicTracker.Application.Tests
             var filepath = $"./{Guid.NewGuid()}";
             using (var writer = CreateConcurrentWriter(filepath))
             {
+                var raisedEvents = new List<GameStateChangedEventArgs>();
                 var watcher = new LogObserver(filepath);
+
                 watcher.Start();
                 await writer.WriteLineAsync("1");
-                await Task.Delay(100);
+                watcher.Notify += (sender, @event) => raisedEvents.Add(@event);
+                await Task.Delay(WriteDelayInMilliseconds);
 
-                var raisedEvent = await Assert.RaisesAsync<GameStateChangedEventArgs>(
-                    handler => watcher.Notify += handler,
-                    handler => watcher.Notify -= handler,
-                    async () =>
-                    {
-                        await writer.WriteLineAsync("2");
-                        await writer.WriteLineAsync("3");
-                        await Task.Delay(WriteDelayInMilliseconds);
-                    });
+                await writer.WriteLineAsync("2\r\n3");
+                await Task.Delay(WriteDelayInMilliseconds);
 
-                Assert.Equal(new[] { "2", "3" }, raisedEvent.Arguments.Data);
+                Assert.True(raisedEvents.Count == 1);
+                Assert.Equal(new[] { "2", "3" }, raisedEvents[0].Data);
             }
         }
 
@@ -169,28 +149,19 @@ namespace MythicTracker.Application.Tests
             var filepath = $"./{Guid.NewGuid()}";
             using (var writer = CreateConcurrentWriter(filepath))
             {
-                var newLines = new List<string>();
                 var watcher = new LogObserver(filepath);
+
                 var raisedEvent = await Assert.RaisesAsync<GameStateChangedEventArgs>(
                     handler => watcher.Notify += handler,
                     handler => watcher.Notify -= handler,
                     async () =>
                     {
                         watcher.Start();
-                        await writer.WriteAsync(" ");
-                        await writer.WriteAsync("1");
-                        await writer.WriteAsync("      ");
-                        await writer.WriteAsync("2");
-                        await writer.WriteLineAsync("  ");
-                        await writer.WriteAsync("3");
-                        await writer.WriteAsync(string.Empty);
-                        await writer.WriteAsync("4");
-                        await writer.WriteLineAsync(string.Empty);
-                        await writer.WriteAsync("5");
+                        await writer.WriteLineAsync("1\r\n\r\n2\r\n \r\n  3  \r\n      \r\n4\r\n      5\r\n6      ");
                         await Task.Delay(WriteDelayInMilliseconds);
                     });
 
-                Assert.Equal(new[] { "1", "2", "3", "4", "5"}, raisedEvent.Arguments.Data);
+                Assert.Equal(new[] { "1", "2", "  3  ", "4", "      5", "6      " }, raisedEvent.Arguments.Data);
             }
         }
 
@@ -205,8 +176,8 @@ namespace MythicTracker.Application.Tests
                 watcher.Notify += (sender, @event) => isEventRaised = true;
 
                 watcher.Start();
-                await writer.WriteAsync(" ");
-                await writer.WriteAsync(string.Empty);
+                await writer.WriteLineAsync(" ");
+                await writer.WriteLineAsync(string.Empty);
                 await Task.Delay(WriteDelayInMilliseconds);
                 Assert.False(isEventRaised);
             }
@@ -218,23 +189,19 @@ namespace MythicTracker.Application.Tests
             var filepath = $"./{Guid.NewGuid()}";
             using (var writer = CreateConcurrentWriter(filepath))
             {
-                var newLines = new List<string>();
+                var raisedEvents = new List<GameStateChangedEventArgs>();
                 var watcher = new LogObserver(filepath);
+                watcher.Notify += (sender, @event) => raisedEvents.Add(@event);
 
-                var raisedEvent = await Assert.RaisesAsync<GameStateChangedEventArgs>(
-                    handler => watcher.Notify += handler,
-                    handler => watcher.Notify -= handler,
-                    async () =>
-                    {
-                        watcher.Start();
-                        await writer.WriteAsync("1");
-                        await Task.Delay(WriteDelayInMilliseconds);
-                        await writer.WriteLineAsync("2");
-                        await writer.WriteLineAsync("3");
-                        await Task.Delay(WriteDelayInMilliseconds);
-                    });
+                watcher.Start();
+                await writer.WriteAsync("1");
+                await Task.Delay(WriteDelayInMilliseconds);
+                await writer.WriteLineAsync("2");
+                await writer.WriteLineAsync("3");
+                await Task.Delay(WriteDelayInMilliseconds);
 
-                Assert.Equal(new[] { "1", "2", "3" }, raisedEvent.Arguments.Data);
+                Assert.True(raisedEvents.Count > 0);
+                Assert.Equal(new[] { "1", "2", "3" }, raisedEvents.SelectMany(x => x.Data).ToArray());
             }
         }
 
@@ -252,6 +219,7 @@ namespace MythicTracker.Application.Tests
                 await writer.WriteLineAsync("2");
                 await writer.WriteLineAsync("3");
                 await Task.Delay(WriteDelayInMilliseconds);
+
                 Assert.False(isEventRaised);
             }
         }
