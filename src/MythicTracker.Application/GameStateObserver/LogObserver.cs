@@ -52,7 +52,7 @@ namespace MythicTracker.Application.GameStateObserver
                     if (linesTemp.Count == 10)
                     {
                         Notify?.Invoke(this, new GameStateChangedEventArgs(linesTemp.ToArray()));
-                        linesTemp.RemoveRange(0, 10);
+                        linesTemp.Clear();
                         counter = 0;
                     }
                 }
@@ -62,6 +62,7 @@ namespace MythicTracker.Application.GameStateObserver
                     {
                         Notify?.Invoke(this, new GameStateChangedEventArgs(linesTemp.ToArray()));
                         counter = 0;
+
                     }
                 }
             }

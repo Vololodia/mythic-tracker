@@ -63,10 +63,9 @@ namespace MythicTracker.Application.Tests
             var filepath = $"./{Guid.NewGuid()}";
             using (var writer = CreateConcurrentWriter(filepath))
             {
-                var newLines = new List<string>();
+                var newLines = new List<GameStateChangedEventArgs>();
                 var watcher = new LogObserver(filepath);
-                watcher.Notify += (sender, @event) => newLines.AddRange(@event.Data);
-                watcher.Start();
+                watcher.Notify += (sender, @event) => newLines.Add(@event);
                 await writer.WriteLineAsync("0");
                 await writer.WriteLineAsync("1");
                 await writer.WriteLineAsync("2");
@@ -82,9 +81,11 @@ namespace MythicTracker.Application.Tests
                 await writer.WriteLineAsync("12");
                 await writer.WriteLineAsync("13");
                 await writer.WriteLineAsync("14");
+                watcher.Start();
                 await Task.Delay(WriteDelayInMilliseconds);
-                Assert.Equal(new[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15" }, newLines);
-               // Assert.Equal(new[] { "11", "12", "13", "14", "15" }, newLines);
+                Assert.Equal(2, newLines.Count);
+                Assert.Equal(new[] { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" }, newLines[0].Data);
+                Assert.Equal(new[] { "10", "11", "12", "13", "14"}, newLines[1].Data);
             }
         }
 
@@ -146,7 +147,7 @@ namespace MythicTracker.Application.Tests
                 var watcher = new LogObserver(filepath);
                 watcher.Start();
                 await writer.WriteLineAsync("1");
-                await Task.Delay(WriteDelayInMilliseconds);
+                await Task.Delay(100);
 
                 var raisedEvent = await Assert.RaisesAsync<GameStateChangedEventArgs>(
                     handler => watcher.Notify += handler,
@@ -212,7 +213,7 @@ namespace MythicTracker.Application.Tests
         }
 
         [Fact]
-        public async Task ShouldNotFireEventForNewCharsOnAlreadyTrackedLine()
+        public async Task ShouldFireEventForNewCharsOnAlreadyTrackedLine()
         {
             var filepath = $"./{Guid.NewGuid()}";
             using (var writer = CreateConcurrentWriter(filepath))
@@ -233,7 +234,7 @@ namespace MythicTracker.Application.Tests
                         await Task.Delay(WriteDelayInMilliseconds);
                     });
 
-                Assert.Equal(new[] { "1", "3" }, raisedEvent.Arguments.Data);
+                Assert.Equal(new[] { "1", "2", "3" }, raisedEvent.Arguments.Data);
             }
         }
 
