@@ -10,7 +10,7 @@ namespace MythicTracker.Application.Tests
 {
     public class LogObserverTests
     {
-        private const int WriteDelayInMilliseconds = 500;
+        private const int WriteDelayInMilliseconds = 100;
 
         [Fact]
         public async Task ShouldFireEventOnNewLogLine()
