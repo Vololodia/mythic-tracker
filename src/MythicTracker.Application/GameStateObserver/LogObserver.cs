@@ -41,29 +41,18 @@ namespace MythicTracker.Application.GameStateObserver
         private void RunLogStreamReader()
         {
             var linesTemp = new List<string>();
-            int counter = 0;
             while (_logReadStreamSwitcher)
             {
                 string line = _streamReader.ReadLine();
                 if (!string.IsNullOrWhiteSpace(line))
                 {
                     linesTemp.Add(line);
-                    counter++;
-                    if (linesTemp.Count == 10)
-                    {
-                        Notify?.Invoke(this, new GameStateChangedEventArgs(linesTemp.ToArray()));
-                        linesTemp.Clear();
-                        counter = 0;
-                    }
                 }
-                else
-                {
-                    if (counter != 0)
-                    {
-                        Notify?.Invoke(this, new GameStateChangedEventArgs(linesTemp.ToArray()));
-                        counter = 0;
 
-                    }
+                if ((line == null && linesTemp.Count != 0) || linesTemp.Count == 10)
+                {
+                    Notify?.Invoke(this, new GameStateChangedEventArgs(linesTemp.ToArray()));
+                    linesTemp.Clear();
                 }
             }
         }

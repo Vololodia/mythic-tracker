@@ -11,6 +11,6 @@ namespace MythicTracker.Application.GameStateObserver
             Data = d;
         }
 
-        public string [] Data { get; private set; }
+        public string[] Data { get; private set; }
     }
 }
