@@ -6,6 +6,8 @@ namespace MythicTracker.Application.GameDatabase
 {
     public interface ICardDatabase
     {
-        Card GetCardOnID(int id);
+        Card GetCard(int id);
+
+        Card[] GetAllCards();
     }
 }

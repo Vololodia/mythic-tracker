@@ -1,44 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json.Bson;
-
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using System.Linq;
 
 namespace MythicTracker.Application.GameDatabase
 {
     public class GameCardsInfoDatabaseProvider : ICardDatabase
     {
         private string _pathToJsonDatabase;
-        private Dictionary<int, Card> _idCardsSInfo;
-        private Dictionary<int, AbilityCard> _idAbilitiesInfo;
+        private Root _idCardsInfo;
 
         public GameCardsInfoDatabaseProvider(string pathToJsonDatabase)
         {
             this._pathToJsonDatabase = pathToJsonDatabase;
+            ConvertFromDatabaseToDictionary();
         }
 
         private void ConvertFromDatabaseToDictionary()
         {
-            _idCardsSInfo = JsonConvert.DeserializeObject<Dictionary<int, Card>>(File.ReadAllText(_pathToJsonDatabase));
-
-            _idAbilitiesInfo = JsonConvert.DeserializeObject<Dictionary<int, AbilityCard>>(File.ReadAllText(_pathToJsonDatabase));
+            _idCardsInfo = JsonConvert.DeserializeObject<Root>(File.ReadAllText(_pathToJsonDatabase));
         }
 
-        Card ICardDatabase.GetCardOnID(int id)
+        public Card GetCard(int id)
         {
-            Card card = _idCardsSInfo[id];
-            if (card == null)
-            {
-                card = _idAbilitiesInfo[id];
-            }
+            Card card = _idCardsInfo.Cards[id];
+            //if (card == null)
+            //{
+            //    card = _idCardsInfo.Abilities[id];
+            //}
 
             return card;
+        }
+
+        public Card[] GetAllCards()
+        {
+            var temp = _idCardsInfo;
+            Card[] totalCards = new Card[temp.Cards.Count];
+            temp.Cards.Values.CopyTo(totalCards, 0);
+            return totalCards;
         }
     }
 }
