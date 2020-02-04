@@ -10,7 +10,7 @@ namespace MythicTracker.Application.Tests
     {
         private GameCardsInfoDatabaseProvider CreateCardsProvider()
         {
-            var filepath = @"C:\Users\Artem\Desktop\database.json";
+            var filepath = "./database.json";
             var provider = new GameCardsInfoDatabaseProvider(filepath);
             return provider;
         }
