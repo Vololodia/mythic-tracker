@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace MythicTracker.Application.GameDatabase
 {
@@ -8,8 +7,5 @@ namespace MythicTracker.Application.GameDatabase
     {
         [JsonProperty("cards")]
         public Dictionary<int, Card> Cards { get; set; }
-
-        //[JsonProperty("abilities")]
-        //public Dictionary<int, Card> Abilities { get; set; }
     }
 }

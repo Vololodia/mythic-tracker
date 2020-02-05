@@ -1,13 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
-using Newtonsoft.Json.Serialization;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Linq;
 
 namespace MythicTracker.Application.GameDatabase
@@ -30,20 +22,22 @@ namespace MythicTracker.Application.GameDatabase
 
         public Card GetCard(int id)
         {
-            Card card = _idCardsInfo.Cards[id];
-            //if (card == null)
-            //{
-            //    card = _idCardsInfo.Abilities[id];
-            //}
-
-            return card;
+            if (_idCardsInfo.Cards.ContainsKey(id))
+            {
+                Card card = _idCardsInfo.Cards[id];
+                return card;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public Card[] GetAllCards()
         {
             var temp = _idCardsInfo;
             Card[] totalCards = new Card[temp.Cards.Count];
-            temp.Cards.Values.CopyTo(totalCards, 0);
+            totalCards = temp.Cards.Values.ToArray();
             return totalCards;
         }
     }

@@ -1,6 +1,4 @@
 ﻿using MythicTracker.Application.GameDatabase;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -10,7 +8,7 @@ namespace MythicTracker.Application.Tests
     {
         private GameCardsInfoDatabaseProvider CreateCardsProvider()
         {
-            var filepath = "./database.json";
+            var filepath = "./GameDatabase/database.json";
             var provider = new GameCardsInfoDatabaseProvider(filepath);
             return provider;
         }
@@ -26,18 +24,6 @@ namespace MythicTracker.Application.Tests
             Assert.Equal(idSample, cardTest.Id);
             Assert.Equal(nameSample, cardTest.Name);
         }
-
-        //[Fact]
-        //public async Task ShouldGetOneAbilityCard()
-        //{
-        //    var cardsProvider = CreateCardsProvider();
-        //    Card cardTest = cardsProvider.GetCard(1);
-        //    int idSample = 1;
-        //    string descriptionSample = "Deathtouch";
-
-        //    Assert.Equal(idSample, cardTest.Id);
-        //    Assert.Equal(descriptionSample, cardTest.Description);
-        //}
 
         [Fact]
         public async Task ShouldGetAllCards()
