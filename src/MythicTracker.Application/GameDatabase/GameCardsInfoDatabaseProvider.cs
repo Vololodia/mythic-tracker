@@ -6,38 +6,21 @@ namespace MythicTracker.Application.GameDatabase
 {
     public class GameCardsInfoDatabaseProvider : ICardDatabase
     {
-        private string _pathToJsonDatabase;
-        private Root _idCardsInfo;
+        private readonly DatabaseModel _idCardsInfo;
 
         public GameCardsInfoDatabaseProvider(string pathToJsonDatabase)
         {
-            this._pathToJsonDatabase = pathToJsonDatabase;
-            ConvertFromDatabaseToDictionary();
-        }
-
-        private void ConvertFromDatabaseToDictionary()
-        {
-            _idCardsInfo = JsonConvert.DeserializeObject<Root>(File.ReadAllText(_pathToJsonDatabase));
+            _idCardsInfo = JsonConvert.DeserializeObject<DatabaseModel>(File.ReadAllText(pathToJsonDatabase));
         }
 
         public Card GetCard(int id)
         {
-            if (_idCardsInfo.Cards.ContainsKey(id))
-            {
-                Card card = _idCardsInfo.Cards[id];
-                return card;
-            }
-            else
-            {
-                return null;
-            }
+            return _idCardsInfo.Cards.TryGetValue(id, out Card card) ? card : null;
         }
 
         public Card[] GetAllCards()
         {
-            var temp = _idCardsInfo;
-            Card[] totalCards = new Card[temp.Cards.Count];
-            totalCards = temp.Cards.Values.ToArray();
+            Card[] totalCards = _idCardsInfo.Cards.Values.ToArray();
             return totalCards;
         }
     }

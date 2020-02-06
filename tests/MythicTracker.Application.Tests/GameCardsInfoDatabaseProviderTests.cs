@@ -6,32 +6,23 @@ namespace MythicTracker.Application.Tests
 {
     public class GameCardsInfoDatabaseProviderTests
     {
-        private GameCardsInfoDatabaseProvider CreateCardsProvider()
-        {
-            var filepath = "./GameDatabase/database.json";
-            var provider = new GameCardsInfoDatabaseProvider(filepath);
-            return provider;
-        }
+        private readonly GameCardsInfoDatabaseProvider _cardsProvider = new GameCardsInfoDatabaseProvider("./GameDatabase/database.json");
 
         [Fact]
         public async Task ShouldGetOneCard()
         {
-            var cardsProvider = CreateCardsProvider();
-            Card cardTest = cardsProvider.GetCard(6873);
-            int idSample = 6873;
-            string nameSample = "Crash of Rhinos";
+            var cardTest = _cardsProvider.GetCard(6873);
 
-            Assert.Equal(idSample, cardTest.Id);
-            Assert.Equal(nameSample, cardTest.Name);
+            Assert.Equal(6873, cardTest.Id);
+            Assert.Equal("Crash of Rhinos", cardTest.Name);
         }
 
         [Fact]
         public async Task ShouldGetAllCards()
         {
-            var cardsProvider = CreateCardsProvider();
-            Card[] allCards = cardsProvider.GetAllCards();
+            Card[] allCards = _cardsProvider.GetAllCards();
 
-            Assert.NotEqual(250, allCards.Length);
+            Assert.Equal(2882, allCards.Length);
         }
     }
 }
