@@ -6,7 +6,7 @@ namespace MythicTracker.Application.Tests
 {
     public class GameCardsInfoDatabaseProviderTests
     {
-        private readonly GameCardsInfoDatabaseProvider _cardsProvider = new GameCardsInfoDatabaseProvider("./GameDatabase/database.json");
+        private readonly FileCardsProvider _cardsProvider = new FileCardsProvider("./GameDatabase/database.json");
 
         [Fact]
         public async Task ShouldGetOneCard()
@@ -15,6 +15,14 @@ namespace MythicTracker.Application.Tests
 
             Assert.Equal(6873, cardTest.Id);
             Assert.Equal("Crash of Rhinos", cardTest.Name);
+        }
+
+        [Fact]
+        public async Task ShouldGetNullWithNullId()
+        {
+            var cardTest = _cardsProvider.GetCard(0);
+
+            Assert.Null(cardTest);
         }
 
         [Fact]
