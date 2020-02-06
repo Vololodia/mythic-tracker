@@ -21,8 +21,8 @@ namespace MythicTracker.Application.Tests
                 var watcher = new LogObserver(filepath);
 
                 var raisedEvent = await Assert.RaisesAsync<GameStateChangedEventArgs>(
-                    handler => watcher.Notify += handler,
-                    handler => watcher.Notify -= handler,
+                    handler => watcher.GameStateChanged += handler,
+                    handler => watcher.GameStateChanged -= handler,
                     async () =>
                     {
                         watcher.Start();
@@ -43,8 +43,8 @@ namespace MythicTracker.Application.Tests
                 var watcher = new LogObserver(filepath);
 
                 var raisedEvent = await Assert.RaisesAsync<GameStateChangedEventArgs>(
-                    handler => watcher.Notify += handler,
-                    handler => watcher.Notify -= handler,
+                    handler => watcher.GameStateChanged += handler,
+                    handler => watcher.GameStateChanged -= handler,
                     async () =>
                     {
                         watcher.Start();
@@ -64,7 +64,7 @@ namespace MythicTracker.Application.Tests
             {
                 var raisedEvents = new List<GameStateChangedEventArgs>();
                 var watcher = new LogObserver(filepath);
-                watcher.Notify += (sender, @event) => raisedEvents.Add(@event);
+                watcher.GameStateChanged += (sender, @event) => raisedEvents.Add(@event);
 
                 watcher.Start();
                 await writer.WriteLineAsync("0\r\n1\r\n2\r\n3\r\n4\r\n5\r\n6\r\n7\r\n8\r\n9\r\n10\r\n11\r\n12\r\n13\r\n14");
@@ -85,8 +85,8 @@ namespace MythicTracker.Application.Tests
                 var watcher = new LogObserver(filepath);
 
                 var raisedEvent = await Assert.RaisesAsync<GameStateChangedEventArgs>(
-                    handler => watcher.Notify += handler,
-                    handler => watcher.Notify -= handler,
+                    handler => watcher.GameStateChanged += handler,
+                    handler => watcher.GameStateChanged -= handler,
                     async () =>
                     {
                         watcher.Start();
@@ -108,7 +108,7 @@ namespace MythicTracker.Application.Tests
             {
                 var raisedEvents = new List<GameStateChangedEventArgs>();
                 var watcher = new LogObserver(filepath);
-                watcher.Notify += (sender, @event) => raisedEvents.Add(@event);
+                watcher.GameStateChanged += (sender, @event) => raisedEvents.Add(@event);
 
                 await writer.WriteLineAsync("1");
                 watcher.Start();
@@ -132,7 +132,7 @@ namespace MythicTracker.Application.Tests
 
                 watcher.Start();
                 await writer.WriteLineAsync("1");
-                watcher.Notify += (sender, @event) => raisedEvents.Add(@event);
+                watcher.GameStateChanged += (sender, @event) => raisedEvents.Add(@event);
                 await Task.Delay(WriteDelayInMilliseconds);
 
                 await writer.WriteLineAsync("2\r\n3");
@@ -152,8 +152,8 @@ namespace MythicTracker.Application.Tests
                 var watcher = new LogObserver(filepath);
 
                 var raisedEvent = await Assert.RaisesAsync<GameStateChangedEventArgs>(
-                    handler => watcher.Notify += handler,
-                    handler => watcher.Notify -= handler,
+                    handler => watcher.GameStateChanged += handler,
+                    handler => watcher.GameStateChanged -= handler,
                     async () =>
                     {
                         watcher.Start();
@@ -173,7 +173,7 @@ namespace MythicTracker.Application.Tests
             {
                 bool isEventRaised = false;
                 var watcher = new LogObserver(filepath);
-                watcher.Notify += (sender, @event) => isEventRaised = true;
+                watcher.GameStateChanged += (sender, @event) => isEventRaised = true;
 
                 watcher.Start();
                 await writer.WriteLineAsync(" ");
@@ -191,7 +191,7 @@ namespace MythicTracker.Application.Tests
             {
                 var raisedEvents = new List<GameStateChangedEventArgs>();
                 var watcher = new LogObserver(filepath);
-                watcher.Notify += (sender, @event) => raisedEvents.Add(@event);
+                watcher.GameStateChanged += (sender, @event) => raisedEvents.Add(@event);
 
                 watcher.Start();
                 await writer.WriteAsync("1");
@@ -213,7 +213,7 @@ namespace MythicTracker.Application.Tests
             {
                 bool isEventRaised = false;
                 var watcher = new LogObserver(filepath);
-                watcher.Notify += (sender, @event) => isEventRaised = true;
+                watcher.GameStateChanged += (sender, @event) => isEventRaised = true;
 
                 await writer.WriteLineAsync("1");
                 await writer.WriteLineAsync("2");
