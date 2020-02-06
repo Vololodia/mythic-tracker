@@ -9,24 +9,25 @@ namespace MythicTracker.Application.GameStateObserver
     {
         private readonly string _filepath;
         private StreamReader _streamReader;
-        private bool _logReadStreamSwitcher;
+        private bool _observingEnable;
 
         public LogObserver(string filepath)
         {
             _filepath = filepath;
-            _streamReader = CreateConcurrentReader(filepath);
         }
 
         public event EventHandler<GameStateChangedEventArgs> Notify;
 
         public void Finish()
         {
-            _logReadStreamSwitcher = false;
+            _observingEnable = false;
+            _streamReader.Dispose();
         }
 
         public void Start()
         {
-            _logReadStreamSwitcher = true;
+            _observingEnable = true;
+            _streamReader = CreateConcurrentReader(_filepath);
             Task.Run(() => RunLogStreamReader());
         }
 
@@ -40,19 +41,19 @@ namespace MythicTracker.Application.GameStateObserver
 
         private void RunLogStreamReader()
         {
-            var linesTemp = new List<string>();
-            while (_logReadStreamSwitcher)
+            var lines = new List<string>();
+            while (_observingEnable)
             {
                 string line = _streamReader.ReadLine();
                 if (!string.IsNullOrWhiteSpace(line))
                 {
-                    linesTemp.Add(line);
+                    lines.Add(line);
                 }
 
-                if ((line == null && linesTemp.Count != 0) || linesTemp.Count == 10)
+                if ((line == null && lines.Count > 0) || lines.Count == 10)
                 {
-                    Notify?.Invoke(this, new GameStateChangedEventArgs(linesTemp.ToArray()));
-                    linesTemp.Clear();
+                    Notify?.Invoke(this, new GameStateChangedEventArgs(lines.ToArray()));
+                    lines.Clear();
                 }
             }
         }

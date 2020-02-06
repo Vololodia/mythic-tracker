@@ -6,9 +6,9 @@ namespace MythicTracker.Application.GameStateObserver
 {
     public class GameStateChangedEventArgs : EventArgs
     {
-        public GameStateChangedEventArgs(string[] d)
+        public GameStateChangedEventArgs(string[] lines)
         {
-            Data = d;
+            Data = lines;
         }
 
         public string[] Data { get; private set; }
