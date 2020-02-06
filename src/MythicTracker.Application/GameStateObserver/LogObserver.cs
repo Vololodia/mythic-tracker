@@ -21,7 +21,11 @@ namespace MythicTracker.Application.GameStateObserver
         public void Finish()
         {
             _observingEnabled = false;
-            _streamReader.Dispose();
+            if (_streamReader != null)
+            {
+                _streamReader.Dispose();
+                _streamReader = null;
+            }
         }
 
         public void Start()
