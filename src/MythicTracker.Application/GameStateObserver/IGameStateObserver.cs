@@ -6,7 +6,7 @@ namespace MythicTracker.Application.GameStateObserver
 {
     public interface IGameStateObserver
     {
-        event EventHandler<GameStateChangedEventArgs> Notify;
+        event EventHandler<GameStateChangedEventArgs> GameStateChanged;
 
         void Start();
 

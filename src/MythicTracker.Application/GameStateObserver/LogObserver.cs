@@ -9,24 +9,24 @@ namespace MythicTracker.Application.GameStateObserver
     {
         private readonly string _filepath;
         private StreamReader _streamReader;
-        private bool _observingEnable;
+        private bool _observingEnabled;
 
         public LogObserver(string filepath)
         {
             _filepath = filepath;
         }
 
-        public event EventHandler<GameStateChangedEventArgs> Notify;
+        public event EventHandler<GameStateChangedEventArgs> GameStateChanged;
 
         public void Finish()
         {
-            _observingEnable = false;
+            _observingEnabled = false;
             _streamReader.Dispose();
         }
 
         public void Start()
         {
-            _observingEnable = true;
+            _observingEnabled = true;
             _streamReader = CreateConcurrentReader(_filepath);
             Task.Run(() => RunLogStreamReader());
         }
@@ -42,7 +42,7 @@ namespace MythicTracker.Application.GameStateObserver
         private void RunLogStreamReader()
         {
             var lines = new List<string>();
-            while (_observingEnable)
+            while (_observingEnabled)
             {
                 string line = _streamReader.ReadLine();
                 if (!string.IsNullOrWhiteSpace(line))
@@ -52,7 +52,7 @@ namespace MythicTracker.Application.GameStateObserver
 
                 if ((line == null && lines.Count > 0) || lines.Count == 10)
                 {
-                    Notify?.Invoke(this, new GameStateChangedEventArgs(lines.ToArray()));
+                    GameStateChanged?.Invoke(this, new GameStateChangedEventArgs(lines.ToArray()));
                     lines.Clear();
                 }
             }
