@@ -1,20 +1,19 @@
-﻿using System;
+﻿using MythicTracker.Application.GameDatabase;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using MythicTracker.Application.GameDatabase;
+using System.Linq;
 
 namespace MythicTracker.Application.GameDeck
 {
     public class Deck
     {
-        private int[] _id;
-        private FileCardsProvider _provider;
+        private int[] _ids;
         private Dictionary<int, CardProbability> _deck;
 
-        public Deck(int[] id)
+        public Deck(int[] ids)
         {
-            this._id = id;
-            _deck = new Dictionary<int, CardProbability>();
+            _ids = ids;
+            Shuffle();
         }
 
         public void AddCard(int id)
@@ -22,11 +21,12 @@ namespace MythicTracker.Application.GameDeck
             _deck.Add(id, new CardProbability(id));
         }
 
-        public void AddCardsSet(int[] id)
+        public void AddCards(int[] ids)
         {
-            for (int i = 0; i < id.Length; i++)
+
+            for (int i = 0; i < ids.Length; i++)
             {
-                _deck.Add(id[i], new CardProbability(id[i]));
+                _deck.Add(ids[i], new CardProbability(ids[i]));
             }
         }
 
@@ -35,18 +35,17 @@ namespace MythicTracker.Application.GameDeck
             _deck.Remove(id);
         }
 
-        public void RemoveCardsSet(int[] id)
+        public void RemoveCards(int[] ids)
         {
-            for (int i = 0; i < id.Length; i++)
+            for (int i = 0; i < ids.Length; i++)
             {
-                _deck.Remove(id[i]);
+                _deck.Remove(ids[i]);
             }
         }
 
-        public Dictionary<int, CardProbability> Shuffle()
+        public void Shuffle()
         {
-            _deck = new Dictionary<int, CardProbability> { };
-            return _deck;
+            _deck = _ids.ToDictionary(x => x, y => new CardProbability(y));
         }
 
         public Deck ResetDeck(int[] id)
