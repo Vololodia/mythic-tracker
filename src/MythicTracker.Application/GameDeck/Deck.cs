@@ -23,8 +23,7 @@ namespace MythicTracker.Application.GameDeck
 
         public void AddCards(int[] ids)
         {
-
-            for (int i = 0; i < ids.Length; i++)
+            foreach (int i in ids)
             {
                 _deck.Add(ids[i], new CardProbability(ids[i]));
             }
