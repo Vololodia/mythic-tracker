@@ -23,9 +23,9 @@ namespace MythicTracker.Application.GameDeck
 
         public void AddCards(int[] ids)
         {
-            foreach (int i in ids)
+            foreach (int id in ids)
             {
-                _deck.Add(ids[i], new CardProbability(ids[i]));
+                _deck.Add(ids[id], new CardProbability(ids[id]));
             }
         }
 
@@ -36,9 +36,9 @@ namespace MythicTracker.Application.GameDeck
 
         public void RemoveCards(int[] ids)
         {
-            for (int i = 0; i < ids.Length; i++)
+            foreach (int id in ids)
             {
-                _deck.Remove(ids[i]);
+                _deck.Remove(ids[id]);
             }
         }
 
