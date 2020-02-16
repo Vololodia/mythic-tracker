@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace MythicTracker.Application.MTGA.Models
 {
@@ -14,6 +15,9 @@ namespace MythicTracker.Application.MTGA.Models
         public int[] AffectedIds { get; set; }
 
         [JsonProperty("type")]
-        public AnnotationType[] Type { get; set; }
+        public AnnotationType[] Types { get; set; }
+
+        [JsonProperty("details")]
+        public AnnotationDetail[] Details { get; set; } = Array.Empty<AnnotationDetail>();
     }
 }

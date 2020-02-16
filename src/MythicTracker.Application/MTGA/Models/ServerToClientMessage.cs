@@ -1,9 +1,7 @@
-﻿using MythicTracker.Application.MTGA.Converters;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace MythicTracker.Application.MTGA.Models
 {
-    //[JsonConverter(typeof(ServerToClientMessageConverter))]
     public class ServerToClientMessage
     {
         [JsonProperty("transactionId")]

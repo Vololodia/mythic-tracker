@@ -17,7 +17,7 @@ namespace MythicTracker.Application.MTGA.Models
         public int ZoneId { get; set; }
 
         [JsonProperty("name")]
-        public int Name { get; set; }
+        public int NameId { get; set; }
 
         [JsonProperty("parentId")]
         public int? ParentId { get; set; }
