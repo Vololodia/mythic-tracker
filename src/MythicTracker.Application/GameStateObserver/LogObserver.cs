@@ -60,6 +60,12 @@ namespace MythicTracker.Application.GameStateObserver
                     lines.Clear();
                 }
             }
+
+            if (lines.Count > 0)
+            {
+                GameStateChanged?.Invoke(this, new GameStateChangedEventArgs(lines.ToArray()));
+                lines.Clear();
+            }
         }
     }
 }
