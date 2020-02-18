@@ -8,9 +8,9 @@ namespace MythicTracker.Application.GameDeck
     {
         private int Id { get; set; }
 
-        private int TopDeckProbability { get; set; }
+        public int TopDeckProbability { get; set; }
 
-        private List<DeckCard> CardInstances { get; set; }
+        public List<DeckCard> CardInstances { get; set; }
 
         public CardProbability(int id)
         {
