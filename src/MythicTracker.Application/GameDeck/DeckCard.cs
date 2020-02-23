@@ -6,6 +6,11 @@ namespace MythicTracker.Application.GameDeck
 {
     public class DeckCard
     {
-        private int[] Positions { get; set; }
+        public int? Position { get; set; }
+
+        public DeckCard(int? position)
+        {
+            Position = position;
+        }
     }
 }

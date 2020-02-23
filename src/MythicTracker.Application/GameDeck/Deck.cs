@@ -14,61 +14,101 @@ namespace MythicTracker.Application.GameDeck
         public Deck(int[] ids)
         {
             _ids = ids;
+            _idsList = new List<int>();
             _idsList.AddRange(_ids);
             Shuffle();
         }
 
-        public void AddCard(int id)
-        {
-            _deck.Add(id, new CardProbability(id));
-        }
-
-        public void AddCards(int[] ids)
-        {
-            foreach (int id in ids)
-            {
-                _deck.Add(id, new CardProbability(id));
-            }
-        }
-
-        public void RemoveCard(int id)
-        {
-            _deck.Remove(id);
-        }
-
-        public void RemoveCards(int[] ids)
-        {
-            foreach (int id in ids)
-            {
-                _deck.Remove(id);
-            }
-        }
-
         public void Shuffle()
         {
-            _deck = _ids.GroupBy(x => x)
-                .Where(g => g.Count() > 1)
-                .ToDictionary(g => g.Key, y => new CardProbability(y.Key) {   });
-            var idsGroups = _ids.GroupBy(x => x)
-                .Where(g => g.Count() > 1)
-                .Select(y => y.Key);
-            _deck = idsGroups.ToDictionary(x => x, y => new CardProbability(y));
+            _deck = _idsList.GroupBy(x => x)
+                .ToDictionary(x => x.Key, x => new CardProbability(x.Key) { CardInstances = x.Select(y => new DeckCard(null)).ToList() });
         }
 
-        public void AddCardInDeck(int id, int cardPosition)
+        public void AddCardInDeck(int id, int position)
         {
-            _idsList.Insert(cardPosition, id);
-            _deck[id].TopDeckProbability = 100;
-            _deck[id].CardInstances.Add(new DeckCard());
-        }
-
-        public void AddCardsInDeck(int[] ids)
-        {
-            foreach (int id in ids)
+            _idsList.Add(id);
+            if (_deck.ContainsKey(id))
             {
-                _idsList.Add(id);
-                _deck[id].TopDeckProbability = 100;
-                _deck[id].CardInstances.Add(new DeckCard());
+                foreach (KeyValuePair<int, CardProbability> value in _deck)
+                {
+                    foreach (DeckCard card in value.Value.CardInstances)
+                    {
+                        if (card.Position != null)
+                        {
+                            if (card.Position >= position)
+                            {
+                                card.Position++;
+                            }
+                            else
+                            {
+                                card.Position--;
+                            }
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                }
+
+                _deck[id].CardInstances.Add(new DeckCard(position));
+            }
+            else
+            {
+                foreach (KeyValuePair<int, CardProbability> value in _deck)
+                {
+                    if (value.Value.CardInstances[0].Position != null)
+                    {
+                        if (value.Value.CardInstances[0].Position >= position)
+                        {
+                            value.Value.CardInstances[0].Position++;
+                        }
+                        else
+                        {
+                            value.Value.CardInstances[0].Position--;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+                }
+
+                _deck.Add(id, new CardProbability(id));
+                _deck[id].CardInstances.Add(new DeckCard(position));
+            }
+        }
+
+        public Dictionary<int, CardProbability> GetDeck()
+        {
+            return _deck;
+        }
+
+        private void SortingDeck()
+        {
+            //foreach (KeyValuePair<int, CardProbability> value in _deck)
+            //{
+            //    foreach (DeckCard card in value.Value.CardInstances)
+            //    {
+            //        if (card.Position != null)
+            //        {
+
+            //        }
+            //    }
+            //}
+        }
+
+        public void RemoveCardInDeck(int id)
+        {
+            _idsList.Remove(id);
+            if (_deck[id].CardInstances.Count != 0)
+            {
+                _deck[id].CardInstances.RemoveAt(_deck[id].CardInstances.Count);
+            }
+            else
+            {
+                _deck.Remove(id);
             }
         }
 
