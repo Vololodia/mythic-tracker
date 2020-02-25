@@ -45,10 +45,6 @@ namespace MythicTracker.Application.GameDeck
                                 card.Position--;
                             }
                         }
-                        else
-                        {
-                            continue;
-                        }
                     }
                 }
 
@@ -68,10 +64,6 @@ namespace MythicTracker.Application.GameDeck
                         {
                             value.Value.CardInstances[0].Position--;
                         }
-                    }
-                    else
-                    {
-                        continue;
                     }
                 }
 
@@ -126,6 +118,36 @@ namespace MythicTracker.Application.GameDeck
                         }
                     }
                 }
+            }
+        }
+
+        public void RemoveCardInDeck(int id, int position)
+        {
+            var cardPosition = _deck[id].CardInstances.Find(x => x.Position == position);
+
+            if (_deck.ContainsKey(id))
+            {
+                _idsList.Remove(id);
+                foreach (KeyValuePair<int, CardProbability> value in _deck)
+                {
+                    foreach (DeckCard card in value.Value.CardInstances)
+                    {
+                        if (card.Position != null)
+                        {
+                            if (card.Position > cardPosition.Position)
+                            {
+                                card.Position--;
+                            }
+                        }
+                    }
+
+                    if (value.Value.CardInstances.Count == 0)
+                    {
+                        _deck.Remove(id);
+                    }
+                }
+
+                _deck[id].CardInstances.Remove(cardPosition);
             }
         }
 

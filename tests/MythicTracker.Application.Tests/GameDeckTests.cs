@@ -148,5 +148,25 @@ namespace MythicTracker.Application.Tests
             Assert.Equal(1, dict[1234].CardInstances[1].Position);
             Assert.Equal(2, dict[1234].CardInstances[0].Position);
         }
+
+        [Fact]
+        public async Task ShouldRemoveCardIdAndPosition()
+        {
+            int[] ids = new int[] { 1 };
+            Deck deck = new Deck(ids);
+
+            deck.AddCardInDeck(112, 1);
+            deck.AddCardInDeck(1234, 1);
+            deck.AddCardInDeck(1234, 1);
+            deck.AddCardInDeck(112, 1);
+
+            deck.RemoveCardInDeck(112, 4);
+
+            var dict = deck.GetDeck();
+
+            Assert.Equal(2, dict[1234].CardInstances[1].Position);
+            Assert.Equal(3, dict[1234].CardInstances[0].Position);
+            Assert.Equal(1, dict[112].CardInstances[0].Position);
+        }
     }
 }
