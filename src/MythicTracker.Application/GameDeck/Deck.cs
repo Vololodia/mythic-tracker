@@ -101,14 +101,31 @@ namespace MythicTracker.Application.GameDeck
 
         public void RemoveCardInDeck(int id)
         {
-            _idsList.Remove(id);
-            if (_deck[id].CardInstances.Count != 0)
+            int copyCardsCounter = _deck[id].CardInstances.Count;
+            var maxCardsPosition = _deck[id].CardInstances.Max(x => x.Position);
+            var minCardsPosition = _deck[id].CardInstances.Min(x => x.Position);
+            if (_deck.ContainsKey(id))
             {
-                _deck[id].CardInstances.RemoveAt(_deck[id].CardInstances.Count);
-            }
-            else
-            {
+                _idsList.Remove(id);
                 _deck.Remove(id);
+                foreach (KeyValuePair<int, CardProbability> value in _deck)
+                {
+                    foreach (DeckCard card in value.Value.CardInstances)
+                    {
+                        if (card.Position != null)
+                        {
+                            if (card.Position > maxCardsPosition )
+                            {
+                                card.Position = card.Position - copyCardsCounter;
+                            }
+
+                            if (card.Position > minCardsPosition && card.Position < maxCardsPosition)
+                            {
+                                card.Position--;
+                            }
+                        }
+                    }
+                }
             }
         }
 

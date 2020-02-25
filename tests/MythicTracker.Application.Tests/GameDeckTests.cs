@@ -122,17 +122,31 @@ namespace MythicTracker.Application.Tests
             deck.AddCardInDeck(1234, 1);
             deck.AddCardInDeck(112, 1);
 
-            List<int?> positions = new List<int?>();
-            Dictionary<int, CardProbability> dict = deck.GetDeck();
-            foreach (var entry in dict)
-            {
-                foreach (var deckCard in entry.Value.CardInstances)
-                {
-                    positions.Add(deckCard.Position);
-                }
-            }
+            var dict = deck.GetDeck();
 
-            Assert.Equal(new int?[] { null, 4, 3, 2, 1 }, positions);
+            Assert.Equal(4, dict[112].CardInstances[0].Position);
+            Assert.Equal(1, dict[112].CardInstances[1].Position);
+            Assert.Equal(3, dict[1234].CardInstances[0].Position);
+            Assert.Equal(2, dict[1234].CardInstances[1].Position);
+        }
+
+        [Fact]
+        public async Task ShouldRemoveCardIdOnly()
+        {
+            int[] ids = new int[] { 1 };
+            Deck deck = new Deck(ids);
+
+            deck.AddCardInDeck(112, 1);
+            deck.AddCardInDeck(1234, 1);
+            deck.AddCardInDeck(1234, 1);
+            deck.AddCardInDeck(112, 1);
+
+            deck.RemoveCardInDeck(112);
+
+            var dict = deck.GetDeck();
+
+            Assert.Equal(1, dict[1234].CardInstances[1].Position);
+            Assert.Equal(2, dict[1234].CardInstances[0].Position);
         }
     }
 }
